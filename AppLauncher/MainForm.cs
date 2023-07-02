@@ -15,46 +15,31 @@ namespace AppLauncher
     [Serializable]
     public partial class MainForm : Form
     {
-        List<KeyValuePair<String, String>> linksList;
+        SortedDictionary<String, String> linksList;
 
         public MainForm()
         {
             InitializeComponent();
-            LoadStartMenuLinks();
-            CacheList();
+            linksList = LoadStartMenuLinks();
         }
 
-        private void CacheList()
+        private SortedDictionary<String, String> LoadStartMenuLinks()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<KeyValuePair<String, String>>));
-            using (StreamWriter writer = new StreamWriter("list.xml")) {
-                serializer.Serialize(writer, linksList);
-            }
-        }
+            SortedDictionary<String, String> dictionary = new SortedDictionary<String, String>();
 
-        private void LoadStartMenuLinks()
-        {
-            Dictionary<String, String> dictionary = new Dictionary<String, String>();
-
-            // load from all users and current user
             String[] links = Utils.MergeArrays(
                 ExtractLinks(Program.GetAllUsersStartMenuDirectory()),
                 ExtractLinks(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu)));
 
             foreach (String p in links) {
                 String filename = Path.GetFileNameWithoutExtension(p);
-                if (dictionary.ContainsValue(filename)) {
+                if (dictionary.ContainsKey(filename)) {
                     continue;
                 }
-                dictionary.Add(p, filename);
+                dictionary.Add(filename, p);
             }
 
-            List<KeyValuePair<String, String>> list = new List<KeyValuePair<String, String>>(dictionary);
-            list.Sort(delegate(KeyValuePair<String, String> a, KeyValuePair<String, String> b) {
-                return a.Value.CompareTo(b.Value);
-            });
-
-            linksList = list;
+            return dictionary;
         }
 
         private String[] ExtractLinks(String path)
@@ -82,7 +67,7 @@ namespace AppLauncher
 
         private void FilterLinks(String keyword)
         {
-            Dictionary<String, String> filteredData = new Dictionary<String, String>();
+            SortedDictionary<String, String> filteredData = new SortedDictionary<String, String>();
 
             foreach (KeyValuePair<String, String> val in linksList) {
                 Boolean containsUninstallWord = val.Key.ToLowerInvariant().Contains("uninstall");
@@ -100,8 +85,8 @@ namespace AppLauncher
             }
 
             appsList.DataSource = new BindingSource(filteredData, null);
-            appsList.DisplayMember = "Value";
-            appsList.ValueMember = "Key";
+            appsList.DisplayMember = "Key";
+            appsList.ValueMember = "Value";
         }
 
         private void ExecuteSelectedLink()
@@ -205,6 +190,18 @@ namespace AppLauncher
         private void OnMainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
+        }
+
+        private void OnAppListKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) {
+                ExecuteSelectedLink();
+            }
+        }
+
+        private void OnAppListMouseDblClick(object sender, MouseEventArgs e)
+        {
+            ExecuteSelectedLink();
         }
     }
 }

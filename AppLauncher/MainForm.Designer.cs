@@ -53,7 +53,7 @@ namespace AppLauncher
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.searchbox.Location = new System.Drawing.Point(12, 28);
             this.searchbox.Name = "searchbox";
-            this.searchbox.Size = new System.Drawing.Size(460, 21);
+            this.searchbox.Size = new System.Drawing.Size(300, 21);
             this.searchbox.TabIndex = 0;
             this.searchbox.TextChanged += new System.EventHandler(this.OnSearchBoxTextChanged);
             this.searchbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnSearchBoxKeyDown);
@@ -61,7 +61,7 @@ namespace AppLauncher
             // launchAction
             // 
             this.launchAction.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.launchAction.Location = new System.Drawing.Point(389, 303);
+            this.launchAction.Location = new System.Drawing.Point(229, 303);
             this.launchAction.Name = "launchAction";
             this.launchAction.Size = new System.Drawing.Size(83, 24);
             this.launchAction.TabIndex = 1;
@@ -79,8 +79,10 @@ namespace AppLauncher
             this.appsList.IntegralHeight = false;
             this.appsList.Location = new System.Drawing.Point(12, 55);
             this.appsList.Name = "appsList";
-            this.appsList.Size = new System.Drawing.Size(460, 242);
+            this.appsList.Size = new System.Drawing.Size(300, 242);
             this.appsList.TabIndex = 2;
+            this.appsList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnAppListMouseDblClick);
+            this.appsList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnAppListKeyDown);
             // 
             // ExcludeUninstallersCheckbox
             // 
@@ -100,7 +102,7 @@ namespace AppLauncher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 337);
+            this.ClientSize = new System.Drawing.Size(324, 337);
             this.Controls.Add(this.ExcludeUninstallersCheckbox);
             this.Controls.Add(label1);
             this.Controls.Add(this.appsList);
